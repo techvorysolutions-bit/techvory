@@ -1486,7 +1486,7 @@ body {
   .nav-links {
     display: flex;
     position: fixed;
-    top: calc(var(--nav-height) + 40px);
+    top: calc(var(--nav-height));
     /* Adjust based on banner */
     left: 0;
     right: 0;
