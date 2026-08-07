@@ -1,301 +1,775 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Expert web development agency specializing in frontend and backend development. Transform your digital presence with our professional web solutions.">
   <title>Techvory | Modern Web Development Agency</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Urbanist:wght@500;600;700&display=swap');
 
+    :root {
+      --primary: #A068FF;
+      --dark-bg: #060218;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-dark: #000000;
+      --text-light: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.7);
+    }
+
+    @property --border-angle {
+      syntax: '<angle>';
+      inherits: true;
+      initial-value: 0turn;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #060218 url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260624_111401_56af5012-2263-45d3-849a-8688084d7c2a.png&w=1280&q=85') top center / cover fixed no-repeat;
+      color: var(--text-light);
+      overflow-x: hidden;
+    }
+
+    .app {
+      background: linear-gradient(to bottom, rgba(6,2,24,0.3) 0%, rgba(6,2,24,0.95) 100vh, #060218 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* --- Typography & Utilities --- */
+    h1, h2, h3, .section-tag {
+      font-family: 'Urbanist', sans-serif;
+    }
+    a { text-decoration: none; color: inherit; }
+    
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 64px;
+      width: 100%;
+    }
+
+    /* --- Animations --- */
+    .animate-fade-down { animation: fadeDown 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .animate-fade-up { opacity: 0; animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .animate-scale-in { opacity: 0; animation: scaleIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-600 { animation-delay: 0.6s; }
+
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+
+    /* --- Header --- */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 64px;
+      max-width: 1920px;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1001; /* Higher than mobile menu */
+    }
+    .header-left, .header-right {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-light);
+      position: relative;
+      z-index: 1002;
+      width: 150px;
+    }
+    .logo img { width: 100%; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-link {
+      font-size: 15px;
+      font-weight: 500;
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 100%; height: 2px;
+      background-color: var(--primary);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .nav-link:hover::after { transform: scaleX(1); }
+
+    /* --- Hamburger Menu --- */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 1002;
+      padding: 8px;
+    }
+    .hamburger span {
+      width: 28px;
+      height: 2px;
+      background-color: var(--text-light);
+      transition: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      border-radius: 2px;
+      display: block;
+    }
+    .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* --- Mobile Menu Overlay --- */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(6, 2, 24, 0.98);
+      backdrop-filter: blur(15px);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform: translateX(100%);
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mobile-menu.active {
+      transform: translateX(0);
+    }
+    .mobile-nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      text-align: center;
+      width: 100%;
+      padding: 0 24px;
+    }
+    .mobile-nav-link {
+      font-size: 28px;
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 600;
+      color: var(--text-light);
+      transition: color 0.3s ease;
+    }
+    .mobile-nav-link:hover { color: var(--primary); }
+
+    /* --- Buttons --- */
+    .btn-border-wrap {
+      position: relative;
+      display: inline-flex;
+      border-radius: 50px;
+    }
+    .btn-border-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 52px;
+      background: conic-gradient(from var(--border-angle), var(--primary), #070319, var(--primary), #070319, var(--primary));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      padding: 2px;
+      animation: rotate-gradient 3s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes rotate-gradient { to { --border-angle: 360deg; } }
+
+    .btn {
+      position: relative;
+      overflow: hidden;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      color: var(--text-light);
+      font-family: 'Inter', sans-serif;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--primary);
+      z-index: -1;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .btn-join {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 12px 26px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .btn-join::after { transform: translateX(-100%); }
+    .btn-join:hover::after { transform: translateX(0); }
+
+    /* --- Hero Section --- */
+    .hero {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: calc(100vh - 100px);
+    }
+    .hero-left {
+      flex: 0 1 600px;
+      padding-top: 40px;
+      position: relative;
+      z-index: 10;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(160, 104, 255, 0.15);
+      border: 1px solid rgba(160, 104, 255, 0.3);
+      color: var(--primary);
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .heading {
+      font-size: 64px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 24px;
+      min-height: 140px; 
+    }
+    .hero-text {
+      font-size: 18px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 40px;
+      max-width: 500px;
+    }
+    .cursor-blink { color: var(--primary); animation: blink 0.8s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+    }
+    
+    /* Hero Right (Circles) */
+    .hero-right {
+      position: relative;
+      width: 720px;
+      height: 720px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .circles-container { position: relative; width: 100%; height: 100%; }
+    .orbit {
+      position: absolute;
+      top: 50%; left: 50%;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .orbit-border {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      padding: 1px;
+      background: linear-gradient(180deg, rgba(217, 161, 255, 0) 0%, rgba(217, 161, 255, 0.6) 43%, rgba(217, 161, 255, 0) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+
+    .spin-left { animation: spinLeft var(--duration) linear infinite; }
+    .spin-right { animation: spinRight var(--duration) linear infinite; }
+    @keyframes spinLeft { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(-360deg); } }
+    @keyframes spinRight { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+    .counter-spin-left { animation: counterSpinLeft var(--duration) linear infinite; }
+    .counter-spin-right { animation: counterSpinRight var(--duration) linear infinite; }
+    @keyframes counterSpinLeft { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes counterSpinRight { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+
+    .center-counter {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 20;
+    }
+    .center-counter h2 { font-size: 72px; font-weight: 600; line-height: 1; }
+    .center-counter p { font-size: 16px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: 2px;}
+
+    .avatar-wrapper { position: absolute; top: 50%; left: 50%; margin-top: -0.5px; margin-left: -0.5px; }
+    .avatar-fly-in { opacity: 0; animation: avatarFlyIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+    @keyframes avatarFlyIn { 0% { transform: scale(0.3) rotate(-180deg); filter: blur(10px); opacity: 0; } 100% { transform: scale(1) rotate(0deg); filter: blur(0); opacity: 1; } }
+    .avatar-img { object-fit: cover; }
+    .shape-round { border-radius: 50%; }
+    .shape-square-20 { border-radius: 20px; }
+    .glow-purple { box-shadow: 0 0 20px rgba(160, 104, 255, 0.5); }
+    .glow-blue { box-shadow: 0 0 20px rgba(100, 150, 255, 0.4); }
+
+    /* --- Sections Shared Layout --- */
+    .section {
+      padding: 100px 0;
+      position: relative;
+      z-index: 10;
+    }
+    .section-header {
+      text-align: left;
+      margin-bottom: 64px;
+    }
+    .section-tag {
+      color: var(--primary);
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 16px;
+    }
+    .section h2 {
+      font-size: 48px;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    .subtitle {
+      font-size: 18px;
+      color: var(--text-muted);
+    }
+    .grid {
+      display: grid;
+      gap: 32px;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+
+    /* --- Cards --- */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(10px);
+      /* Bouncy cubic-bezier for a more premium feel */
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden; /* Needed to contain the shine effect */
+      z-index: 1;
+    }
+
+    /* Sweep shine effect */
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        to right, 
+        transparent, 
+        rgba(255, 255, 255, 0.08), 
+        transparent
+      );
+      transform: skewX(-25deg);
+      transition: left 0.7s ease;
+      z-index: -1;
+    }
+
+    .card:hover::before {
+      left: 200%; /* Sweeps the shine across the card */
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: rgba(160, 104, 255, 0.6);
+      background: rgba(160, 104, 255, 0.08);
+      /* Outer neon glow and subtle inner highlight */
+      box-shadow: 
+        0 15px 35px -10px rgba(160, 104, 255, 0.3),
+        inset 0 0 20px rgba(160, 104, 255, 0.05);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(160, 104, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: var(--primary);
+      transition: all 0.4s ease; /* Transition for icon */
+    }
+
+    /* Animate the icon on card hover */
+    .card:hover .card-icon {
+      transform: scale(1.15) rotate(-5deg);
+      background: var(--primary);
+      color: var(--text-light);
+      box-shadow: 0 8px 16px rgba(160, 104, 255, 0.4);
+    }
+
+    .card h3 { font-size: 24px; margin-bottom: 12px; }
+    .card p { color: var(--text-muted); line-height: 1.6; }
+
+    /* Staggered card entrance */
+    .grid .card {
+      opacity: 0;
+      animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    
+    /* Delay each card in the grid slightly */
+    .grid .card:nth-child(1) { animation-delay: 0.1s; }
+    .grid .card:nth-child(2) { animation-delay: 0.2s; }
+    .grid .card:nth-child(3) { animation-delay: 0.3s; }
+    .grid .card:nth-child(4) { animation-delay: 0.4s; }
+    .grid .card:nth-child(5) { animation-delay: 0.5s; }
+    .grid .card:nth-child(6) { animation-delay: 0.6s; }
+
+    /* Team Specific */
+    .team-card {
+      text-align: center;
+      padding: 40px 24px;
+    }
+    .team-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      overflow: hidden;
+      border: 2px solid var(--primary);
+      padding: 4px;
+    }
+    .team-image img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .role { display: block; color: var(--primary); font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+
+    /* Footer & Contact */
+    .contact-grid { display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; background: var(--card-bg); padding: 48px; border-radius: 24px; border: 1px solid var(--card-border); }
+    .contact-info { display: flex; flex-direction: column; gap: 16px; }
+    .contact-link { display: flex; align-items: center; gap: 12px; font-size: 18px; transition: color 0.3s; }
+    .contact-link:hover { color: var(--primary); }
+    
+    footer { padding: 64px 0; border-top: 1px solid var(--card-border); margin-top: 64px; }
+    .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+    .footer-brand p { color: var(--text-muted); margin: 16px 0; }
+    .footer-links-group h4 { margin-bottom: 20px; font-size: 18px; }
+    .footer-links-group ul { list-style: none; display: flex; flex-direction: column; gap: 12px; color: var(--text-muted); }
+    .footer-links-group a:hover { color: var(--primary); }
+
+    /* Logo Ticker */
+    .ticker-section { 
+      padding: 40px 0; 
+      width: 100%; 
+      overflow: hidden; 
+      -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); 
+      border-top: 1px solid var(--card-border); 
+      border-bottom: 1px solid var(--card-border); 
+      background: rgba(0,0,0,0.2); 
+    }
+    .ticker-track { 
+      display: flex; 
+      gap: 80px; 
+      width: max-content; 
+      animation: marquee 25s linear infinite; 
+      align-items: center;
+    }
+    @keyframes marquee { to { transform: translateX(calc(-50% - 40px)); } }
+    
+    .ticker-logo { 
+      height: 50px; 
+      width: auto;
+      object-fit: contain; 
+      filter: grayscale(1) opacity(0.6); 
+      transition: filter 0.3s ease, transform 0.3s ease; 
+    }
+    .ticker-logo:hover {
+      filter: grayscale(0) opacity(1);
+      transform: scale(1.1);
+    }
+
+    /* --- Responsive Queries --- */
+    @media (max-width: 1024px) {
+      .hero { flex-direction: column; text-align: center; gap: 40px; padding: 40px 0; }
+      .hero-left { flex: none; width: 100%; display: flex; flex-direction: column; align-items: center; }
+      .hero-text { margin-left: auto; margin-right: auto; }
+      .hero-right { transform: scale(0.7); margin-top: -60px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .contact-grid { grid-template-columns: 1fr; text-align: center; justify-items: center; }
+    }
+    
+    /* MOBILE VIEW FIXES */
+    @media (max-width: 768px) {
+      /* Fix spacing & padding */
+      .container { padding: 0 24px; }
+      .header { padding: 16px 24px; }
+      
+      /* Toggle Menu display logic */
+      .nav-links { display: none; }
+      .header-right .btn-border-wrap { display: none; } /* Hide main CTA to save space for hamburger */
+      .hamburger { display: flex; }
+
+      /* Hero Section layout fix */
+      .heading { font-size: 40px; min-height: auto; }
+      .hero { padding-top: 20px; gap: 0; }
+      .hero-text { font-size: 16px; margin-bottom: 32px; padding: 0 10px; }
+      .hero-buttons { flex-direction: column; width: 100%; padding: 0 20px; }
+      .hero-buttons .btn-border-wrap, .hero-buttons .btn { width: 100%; }
+
+      /* Fix the overflowing giant orbits */
+      .hero-right { 
+        transform: scale(0.4); 
+        margin-top: -180px; 
+        margin-bottom: -180px; 
+      }
+
+      /* Fix section spacing & Grid overflowing */
+      .section { padding: 60px 0; }
+      .section h2 { font-size: 36px; }
+      .grid { grid-template-columns: 1fr; gap: 20px; } 
+
+      /* Footer & Contact fixes */
+      .footer-top { grid-template-columns: 1fr; gap: 32px; }
+      .contact-grid { padding: 32px 24px; grid-template-columns: 1fr; }
+      .contact-link { font-size: 16px; word-break: break-all; justify-content: center; }
+      .contact-info { text-align: center; align-items: center; }
+    }
+  </style>
+</head>
 <body>
 
-  <!-- Navbar -->
-  <header class="header">
-    <div class="container navbar-container">
-      <a href="#" class="logo">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" class="logo-icon">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        <span>Techvory</span>
-      </a>
-
-      <nav class="nav-links">
-        <a href="#services">Services</a>
-        <a href="#portfolio">Work</a>
-        <a href="#why-choose-us">Why Us</a>
-        <a href="#contact">Contact</a>
-        <!-- Mobile Only CTA -->
-        <a href="https://calendly.com/business-techvory/30min" target="_blank" rel="noopener noreferrer"
-          class="button primary nav-btn mobile-cta">
-          Book Call
+  <div class="app">
+    
+    <!-- Header -->
+    <header class="header animate-fade-down">
+      <div class="header-left">
+        <a href="#" class="logo">
+          <img src="./images/logo.png" alt="Techvory Logo" />
         </a>
-      </nav>
-
-      <div class="nav-actions">
-        <a href="https://calendly.com/business-techvory/30min" target="_blank" rel="noopener noreferrer"
-          class="button primary nav-btn desktop-cta">
-          Book Call
-        </a>
-        <button class="hamburger-btn" aria-label="Toggle menu" onclick="toggleMenu()">
-          <!-- Menu Icon -->
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-menu" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-          <!-- Close Icon -->
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon-close" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+        <nav class="nav-links">
+          <a href="#services" class="nav-link">Services</a>
+          <a href="#why-choose-us" class="nav-link">Why Us</a>
+          <a href="#contact" class="nav-link">Contact</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <div class="btn-border-wrap">
+          <a href="https://calendly.com/business-techvory/30min" target="_blank" class="btn btn-join">Book Call</a>
+        </div>
+        <!-- Hamburger Icon -->
+        <button class="hamburger" id="hamburger" aria-label="Toggle Menu">
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <nav class="mobile-nav-links">
+        <a href="#services" class="mobile-nav-link">Services</a>
+        <a href="#why-choose-us" class="mobile-nav-link">Why Us</a>
+        <a href="#team" class="mobile-nav-link">Team</a>
+        <a href="#contact" class="mobile-nav-link">Contact</a>
+        <div class="btn-border-wrap" style="margin-top: 24px;">
+          <a href="https://calendly.com/business-techvory/30min" target="_blank" class="btn btn-join" style="padding: 16px 32px; font-size: 18px;">Book a Call</a>
+        </div>
+      </nav>
+    </div>
+
     <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-bg"></div>
-      <div class="container hero-content">
+    <main class="hero container">
+      <!-- Left Content -->
+      <div class="hero-left animate-fade-up">
         <div class="hero-badge">Idea to MVP in 30 days</div>
-        <h1 class="hero-heading">
-          Launch Your Product <br>
-          <span class="highlight">/with speed/</span>
+        
+        <h1 class="heading">
+          <span id="typewriter-text"></span><span class="cursor-blink">|</span>
         </h1>
-        <p class="hero-text">
-          Production-grade MVPs, SaaS apps, and AI tools delivered in weeks.
-          Stop experimenting, start scaling.
+        
+        <p class="hero-text delayed-fade-up" style="animation-delay: 2s; opacity: 0; animation: fadeUp 0.8s forwards;">
+          Production-grade MVPs, SaaS apps, and AI tools delivered in weeks.<br>Stop experimenting, start scaling.
         </p>
-        <div class="hero-buttons">
-          <a href="#contact" class="button primary hero-btn">Start Building</a>
-          <a href="#portfolio" class="button secondary hero-btn-sec">View Portfolio</a>
+
+        <div class="hero-buttons delayed-fade-up" style="animation-delay: 2.4s; opacity: 0; animation: fadeUp 0.8s forwards;">
+          <div class="btn-border-wrap">
+            <a href="#contact" class="btn btn-join" style="background: rgba(160, 104, 255, 0.2);">Start Building</a>
+          </div>
         </div>
       </div>
-    </section>
+
+      <!-- Right Content - Visualizer -->
+      <div class="hero-right animate-scale-in delay-300">
+        <div class="circles-container">
+          
+          <div class="center-counter">
+            <h2 id="days-count">0</h2>
+            <p>Days to MVP</p>
+          </div>
+
+          <!-- Orbit 1 (Left / 30s) -->
+          <div class="orbit spin-left" style="width: 353px; height: 353px; --duration: 30s;">
+            <div class="orbit-border"></div>
+            <div class="avatar-wrapper" style="transform: rotate(270deg) translateX(176.5px) rotate(-270deg);">
+              <div class="counter-spin-left avatar-fly-in" style="--duration: 30s; animation-delay: 0.6s;">
+                <img src="https://polo-pecan-73837341.figma.site/_assets/v11/aa51718fb3af3637e6d666b6543fc27a175fada6.png" class="avatar-img shape-square-20 glow-purple" style="width: 58px; height: 58px;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Orbit 2 (Right / 40s) -->
+          <div class="orbit spin-right" style="width: 501px; height: 501px; --duration: 40s;">
+            <div class="orbit-border"></div>
+            <div class="avatar-wrapper" style="transform: rotate(60deg) translateX(250.5px) rotate(-60deg);">
+              <div class="counter-spin-right avatar-fly-in" style="--duration: 40s; animation-delay: 0.9s;">
+                <img src="https://polo-pecan-73837341.figma.site/_assets/v11/ca755f7f93c1126fb8bdbf99ab364a33aa9ab272.png" class="avatar-img shape-round glow-blue" style="width: 58px; height: 58px;" />
+              </div>
+            </div>
+            <div class="avatar-wrapper" style="transform: rotate(240deg) translateX(250.5px) rotate(-240deg);">
+              <div class="counter-spin-right avatar-fly-in" style="--duration: 40s; animation-delay: 1.3s;">
+                <img src="https://polo-pecan-73837341.figma.site/_assets/v11/d5470a58b02388336141575048720f19a50de832.png" class="avatar-img shape-square-20 glow-blue" style="width: 58px; height: 58px;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Orbit 3 (Right / 50s) -->
+          <div class="orbit spin-right" style="width: 649px; height: 649px; --duration: 50s;">
+            <div class="orbit-border"></div>
+            <div class="avatar-wrapper" style="transform: rotate(130deg) translateX(324.5px) rotate(-130deg);">
+              <div class="counter-spin-right avatar-fly-in" style="--duration: 50s; animation-delay: 1.5s;">
+                <img src="https://polo-pecan-73837341.figma.site/_assets/v11/018736aa5d0275c4ce56cfebaf2ae3007d81ca1e.png" class="avatar-img shape-round glow-purple" style="width: 88px; height: 88px;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Orbit 4 (Left / 60s) -->
+          <div class="orbit spin-left" style="width: 797px; height: 797px; --duration: 60s;">
+            <div class="orbit-border"></div>
+            <div class="avatar-wrapper" style="transform: rotate(30deg) translateX(398.5px) rotate(-30deg);">
+              <div class="counter-spin-left avatar-fly-in" style="--duration: 60s; animation-delay: 1.7s;">
+                <img src="https://polo-pecan-73837341.figma.site/_assets/v11/c76d8a0b99676de31c014344bfaf75bad090758d.png" class="avatar-img shape-round glow-purple" style="width: 58px; height: 58px;" />
+              </div>
+            </div>
+            <div class="avatar-wrapper" style="transform: rotate(220deg) translateX(398.5px) rotate(-220deg);">
+              <div class="counter-spin-left avatar-fly-in" style="--duration: 60s; animation-delay: 2.1s;">
+                <img src="https://polo-pecan-73837341.figma.site/_assets/v11/9ae171d8895199349755c43fbff00e122221a027.png" class="avatar-img shape-square-20 glow-blue" style="width: 88px; height: 88px;" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Tech Stack Ticker -->
+    <div class="ticker-section animate-fade-up delay-600">
+      <div class="ticker-track" id="ticker-track"></div>
+    </div>
 
     <!-- Services Section -->
-    <section id="services" class="services">
+    <section id="services" class="section">
       <div class="container">
         <div class="section-header">
           <span class="section-tag">/capabilities/</span>
           <h2>Build Everything.</h2>
           <p class="subtitle">Comprehensive product development solutions.</p>
         </div>
-
-        <div class="services-grid">
-          <div class="service-card">
-            <div class="service-icon-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-code service-icon">
-                <polyline points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
-              </svg>
-            </div>
+        <div class="grid">
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg></div>
             <h3>MVP & SaaS App</h3>
-            <p>We build production-ready MVPs and SaaS apps — from auth to payments to admin dashboards — in 30 days.
-            </p>
+            <p>We build production-ready MVPs and SaaS apps — from auth to payments to admin dashboards — in 30 days.</p>
           </div>
-          <div class="service-card">
-            <div class="service-icon-wrapper">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="3" y1="9" x2="21" y2="9"></line>
-                <line x1="9" y1="21" x2="9" y2="9"></line>
-              </svg>
-            </div>
-            <h3>Landing pages</h3>
-            <p>High-converting landing pages optimized for lead generation and sales that boost your business growth.
-            </p>
-
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div>
+            <h3>Landing Pages</h3>
+            <p>High-converting landing pages optimized for lead generation and sales that boost your business growth.</p>
           </div>
-          <div class="service-card">
-            <div class="service-icon-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-construction">
-                <rect x="2" y="6" width="20" height="8" rx="1" />
-                <path d="M17 14v7" />
-                <path d="M7 14v7" />
-                <path d="M17 3v3" />
-                <path d="M7 3v3" />
-                <path d="M10 14 2.3 6.3" />
-                <path d="m14 6 7.7 7.7" />
-                <path d="m8 6 8 8" />
-              </svg>
-            </div>
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="8" rx="1" /><path d="M17 14v7" /><path d="M7 14v7" /><path d="M17 3v3" /><path d="M7 3v3" /><path d="M10 14 2.3 6.3" /><path d="m14 6 7.7 7.7" /><path d="m8 6 8 8" /></svg></div>
             <h3>Website Revamp</h3>
             <p>Transform outdated websites into visually appealing and user-friendly platforms.</p>
-
           </div>
-          <div class="service-card">
-            <div class="service-icon-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-database-zap">
-                <ellipse cx="12" cy="5" rx="9" ry="3" />
-                <path d="M3 5V19A9 3 0 0 0 15 21.84" />
-                <path d="M21 5V8" />
-                <path d="M21 12L18 17H22L19 22" />
-                <path d="M3 12A9 3 0 0 0 14.59 14.87" />
-              </svg>
-            </div>
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 15 21.84" /><path d="M21 5V8" /><path d="M21 12L18 17H22L19 22" /><path d="M3 12A9 3 0 0 0 14.59 14.87" /></svg></div>
             <h3>AI App Integration</h3>
-            <p>We add AI where it actually helps: GPT chatbots, analytics to drive business growth.</p>
-
+            <p>We add AI where it actually helps: GPT chatbots, intelligent analytics to drive business growth.</p>
           </div>
-          <div class="service-card">
-            <div class="service-icon-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-layout-template">
-                <rect width="18" height="7" x="3" y="3" rx="1" />
-                <rect width="9" height="7" x="3" y="14" rx="1" />
-                <rect width="5" height="7" x="16" y="14" rx="1" />
-              </svg>
-            </div>
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="7" x="3" y="3" rx="1" /><rect width="9" height="7" x="3" y="14" rx="1" /><rect width="5" height="7" x="16" y="14" rx="1" /></svg></div>
             <h3>Internal Tools</h3>
-            <p>We design and build dashboards, admin panels, analytics tools, and workflows that fit your business
-              perfectly.</p>
-
+            <p>We design and build dashboards, admin panels, analytics tools, and workflows that fit your business perfectly.</p>
           </div>
-          <div class="service-card">
-            <div class="service-icon-wrapper">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="lucide lucide-hard-drive-download">
-                <path d="M12 2v8" />
-                <path d="m16 6-4 4-4-4" />
-                <rect width="20" height="8" x="2" y="14" rx="2" />
-                <path d="M6 18h.01" />
-                <path d="M10 18h.01" />
-              </svg>
-            </div>
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v8" /><path d="m16 6-4 4-4-4" /><rect width="20" height="8" x="2" y="14" rx="2" /><path d="M6 18h.01" /><path d="M10 18h.01" /></svg></div>
             <h3>E-Commerce Store</h3>
-            <p>Launch your storefront or marketplace with full-stack support — product listings, checkout, CMS,
-              analytcs.</p>
-
+            <p>Launch your storefront or marketplace with full-stack support — product listings, checkout, CMS.</p>
           </div>
-          <!-- Add other service cards -->
         </div>
       </div>
     </section>
 
-    <!-- Why Choose Us Section -->
-    <section id="why-choose-us" class="why-choose-us">
+    <!-- Why Us Section -->
+    <section id="why-choose-us" class="section">
       <div class="container">
         <div class="section-header">
           <span class="section-tag">/why us/</span>
           <h2>Why Choose Us.</h2>
           <p class="subtitle">Partner with experts who understand your business needs.</p>
         </div>
-
-        <!-- <div class="stats-grid">
-          <div class="stat-card">
-            <span class="stat-number">4+</span>
-            <p>Years Experience</p>
-          </div>
-          <div class="stat-card">
-            <span class="stat-number">20+</span>
-            <p>Projects Delivered</p>
-          </div>
-          <div class="stat-card">
-            <span class="stat-number">98%</span>
-            <p>Client Satisfaction</p>
-          </div>
-        </div> -->
-
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-            </div>
+        <div class="grid">
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
             <h3>MVPs That Actually Ship</h3>
-            <p>We don’t just start projects — we finish them. Our process is designed to take you from idea to
-              production-grade MVP in 30–45 days.</p>
+            <p>We don’t just start projects — we finish them. Our process is designed to take you from idea to production-grade MVP in 30–45 days.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="8" y="8" width="8" height="8" rx="2"></rect>
-                <path d="M3 12h5"></path>
-                <path d="M16 12h5"></path>
-                <path d="M12 3v5"></path>
-                <path d="M12 16v5"></path>
-              </svg>
-
-
-            </div>
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="8" height="8" rx="2"></rect><path d="M3 12h5"></path><path d="M16 12h5"></path><path d="M12 3v5"></path><path d="M12 16v5"></path></svg></div>
             <h3>Full-Stack & AI Experts</h3>
-            <p>React, Next.js, Node, GPT-4, vector DBs — we build both the app and the smarts. No need to juggle
-              multiple vendors.</p>
+            <p>React, Next.js, Node, GPT-4, vector DBs — we build both the app and the smarts. No need to juggle multiple vendors.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="4" rx="1"></rect>
-                <rect x="3" y="10" width="18" height="4" rx="1"></rect>
-                <rect x="3" y="16" width="18" height="4" rx="1"></rect>
-              </svg>
-
-            </div>
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4" rx="1"></rect><rect x="3" y="10" width="18" height="4" rx="1"></rect><rect x="3" y="16" width="18" height="4" rx="1"></rect></svg></div>
             <h3>Build for Scale, Not Demo</h3>
-            <p>Our apps don’t break at first growth. We focus on performance, scalability, and clean code that grows
-              with your business.</p>
+            <p>Our apps don’t break at first growth. We focus on performance, scalability, and clean code that grows with your business.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 12l4 4"></path>
-                <path d="M20 12l-4 4"></path>
-                <path d="M8 16l4 4"></path>
-                <path d="M16 16l-4 4"></path>
-                <path d="M12 12l4-4"></path>
-                <path d="M12 12l-4-4"></path>
-              </svg>
-
-
-            </div>
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l4 4"></path><path d="M20 12l-4 4"></path><path d="M8 16l4 4"></path><path d="M16 16l-4 4"></path><path d="M12 12l4-4"></path><path d="M12 12l-4-4"></path></svg></div>
             <h3>Direct Access to Builders</h3>
-            <p>No middle managers, no endless handoffs. You work directly with the devs building your product — faster
-              communication, better outcomes.</p>
+            <p>No middle managers, no endless handoffs. You work directly with the devs building your product — faster communication.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 3a4 4 0 0 0-4 4v10a4 4 0 0 0 4 4"></path>
-                <path d="M15 3a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4"></path>
-                <path d="M9 12h6"></path>
-                <path d="M9 6h6"></path>
-                <path d="M9 18h6"></path>
-              </svg>
-
-            </div>
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3a4 4 0 0 0-4 4v10a4 4 0 0 0 4 4"></path><path d="M15 3a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4"></path><path d="M9 12h6"></path><path d="M9 6h6"></path><path d="M9 18h6"></path></svg></div>
             <h3>Product Thinking</h3>
-            <p>We think beyond features. Expect input on UX, conversion flows, and what will make your app succeed in
-              the real world.</p>
+            <p>We think beyond features. Expect input on UX, conversion flows, and what will make your app succeed in the real world.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              </svg>
-            </div>
+          <div class="card">
+            <div class="card-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
             <h3>Partner, Not Just Vendor</h3>
             <p>We care about your product’s success as much as you do. Our goal: help you launch, learn, and grow.</p>
           </div>
@@ -303,194 +777,40 @@
       </div>
     </section>
 
-    <section id="team" class="team-members">
+    <!-- Team Section -->
+    <section id="team" class="section">
       <div class="container">
         <div class="section-header">
           <span class="section-tag">/team/</span>
           <h2>Meet Our Team.</h2>
           <p class="subtitle">Talented professionals dedicated to your success.</p>
         </div>
-
-        <div class="team-grid">
-          <div class="team-card">
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+          
+          <div class="card team-card">
             <div class="team-image">
-              <img src="images/arpit.jpeg" alt="Arpit Rathi">
+              <img src="./images/arpit.jpeg" alt="Arpit Rathi">
             </div>
-            <div class="team-content">
-              <h3>Arpit Rathi</h3>
-              <span class="role">Senior Frontend Engineer</span>
-              <p>UI/UX designer specializing in fast, sleek, and high-performing MVPs for SaaS startups.
-                Also experienced in full-cycle web/app design, scalable UI systems, and crafting performance-optimized
-                digital experiences across industries.</p>
-              <div class="social-links">
-                <a href="https://www.linkedin.com/in/arpitrathi2218/" target="_blank" aria-label="LinkedIn">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                    <rect width="4" height="12" x="2" y="9" />
-                    <circle cx="4" cy="4" r="2" />
-                  </svg>
-                </a>
-                <a href="https://github.com/Arpit2218B" target="_blank" aria-label="GitHub">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                      d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                    <path d="M9 18c-4.51 2-5-2-7-2" />
-                  </svg>
-                </a>
-              </div>
-            </div>
+            <h3>Arpit Rathi</h3>
+            <span class="role">Senior Frontend Engineer</span>
+            <p>UI/UX designer specializing in fast, sleek, and high-performing MVPs for SaaS startups. Experienced in scalable UI systems, and crafting performance-optimized digital experiences.</p>
           </div>
 
-          <div class="team-card">
+          <div class="card team-card">
             <div class="team-image">
-              <img src="images/navdeep.jpg" alt="Navdeep Singh">
+              <img src="./images/navdeep.jpg" alt="Navdeep Singh">
             </div>
-            <div class="team-content">
-              <h3>Navdeep Singh</h3>
-              <span class="role">Senior Backend Engineer</span>
-              <p>Backend engineer with expertise in secure, scalable infrastructure and AI-powered backend systems for
-                SaaS products.
-                Skilled in API development, data architecture, and integrating intelligent features while maintaining
-                enterprise-grade security.</p>
-              <div class="social-links">
-                <a href="https://www.linkedin.com/in/navdeep-singh-494498152/" target="_blank" aria-label="LinkedIn">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                    <rect width="4" height="12" x="2" y="9" />
-                    <circle cx="4" cy="4" r="2" />
-                  </svg>
-                </a>
-                <a href="https://github.com/nav2302" target="_blank" aria-label="GitHub">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path
-                      d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                    <path d="M9 18c-4.51 2-5-2-7-2" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">/projects/</span>
-          <h2>Featured Work.</h2>
-          <p class="subtitle">Explore our latest projects and success stories.</p>
-        </div>
-        <div class="portfolio-grid">
-          <!-- Item 1 -->
-          <div class="portfolio-card">
-            <div class="portfolio-image">
-              <img src="images/spotifyclone.png" alt="Spotify Clone">
-            </div>
-            <div class="portfolio-content">
-              <h3>Respotify</h3>
-              <p>A fully functional Spotify clone web application.</p>
-              <div class="tags">
-                <span>React</span>
-                <span>OAuth2.0</span>
-                <span>Responsive</span>
-              </div>
-            </div>
+            <h3>Navdeep Singh</h3>
+            <span class="role">Senior Backend Engineer</span>
+            <p>Backend engineer with expertise in secure, scalable infrastructure and AI-powered systems. Skilled in API development, data architecture, and integrating intelligent features.</p>
           </div>
 
-          <!-- Item 2 -->
-          <div class="portfolio-card">
-            <div class="portfolio-image">
-              <img src="images/whatsappclone.png" alt="Whatsapp clone">
-            </div>
-            <div class="portfolio-content">
-              <h3>Pulsechat</h3>
-              <p>Realtime messaging application with instant updates.</p>
-              <div class="tags">
-                <span>React</span>
-                <span>Firebase</span>
-                <span>Realtime chat</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Item 3 -->
-          <div class="portfolio-card">
-            <div class="portfolio-image">
-              <img src="images/themeswitcher.png" alt="Theme switcher">
-            </div>
-            <div class="portfolio-content">
-              <h3>Themed</h3>
-              <p>Advanced theme switching capability demonstration.</p>
-              <div class="tags">
-                <span>UI/UX design</span>
-                <span>HTML</span>
-                <span>CSS</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Item 4 -->
-          <a class="portfolio-card" target="_blank"
-            href="https://medium.com/@business_28892/a-modern-e-commerce-application-backend-a-deep-dive-into-technologies-5ad8dd96b7c5">
-            <div class="portfolio-image">
-              <img src="https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80"
-                alt="E-commerce Platform">
-            </div>
-            <div class="portfolio-content">
-              <h3>BoldStore</h3>
-              <p>Scalable backend for modern e-commerce platforms.</p>
-              <div class="tags">
-                <span>Java</span>
-                <span>Springboot</span>
-                <span>JWT</span>
-              </div>
-            </div>
-          </a>
-
-          <!-- Item 5 -->
-          <a class="portfolio-card" target="_blank"
-            href="https://medium.com/@business_28892/building-the-backend-of-a-stock-market-application-technologies-and-implementation-99833795831f">
-            <div class="portfolio-image">
-              <img src="images/stock_market.png" alt="Stock Market Tracker">
-            </div>
-            <div class="portfolio-content">
-              <h3>Equity Screener</h3>
-              <p>Realtime stock market analysis and tracking tool.</p>
-              <div class="tags">
-                <span>Zuul</span>
-                <span>Eureka</span>
-              </div>
-            </div>
-          </a>
-
-          <!-- Item 6 -->
-          <a class="portfolio-card" target="_blank"
-            href="https://medium.com/@business_28892/building-a-secure-payment-gateway-with-oauth-and-captcha-18bd252aca15">
-            <div class="portfolio-image">
-              <img src="images/payment_gateway.png" alt="Payment Gateway">
-            </div>
-            <div class="portfolio-content">
-              <h3>PayNow Gateway</h3>
-              <p>Secure payment processing integration.</p>
-              <div class="tags">
-                <span>Java</span>
-                <span>Razorpay</span>
-                <span>Captcha</span>
-              </div>
-            </div>
-          </a>
         </div>
       </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="contact">
+    <section id="contact" class="section">
       <div class="container">
         <div class="section-header">
           <span class="section-tag">/contact/</span>
@@ -500,414 +820,158 @@
         <div class="contact-grid">
           <div class="contact-info">
             <a href="mailto:techvorysolutions@gmail.com" class="contact-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
               techvorysolutions@gmail.com
             </a>
             <a href="tel:+919566792784" class="contact-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path
-                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-                </path>
-              </svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
               +91 9566792784
             </a>
             <a href="tel:+919451672228" class="contact-link">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path
-                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-                </path>
-              </svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
               +91 9451672228
             </a>
           </div>
-          <a href="https://calendly.com/business-techvory/30min" target="_blank" rel="noopener noreferrer"
-            class="button primary">
-            Book a free discovery call
-          </a>
+          <div class="btn-border-wrap">
+            <a href="https://calendly.com/business-techvory/30min" target="_blank" class="btn btn-join">Book a free discovery call</a>
+          </div>
         </div>
       </div>
     </section>
-  </main>
 
-  <div class="floating">
-    <a href="https://calendly.com/business-techvory/30min" target="_blank" rel="noopener noreferrer"
-      class="button primary">
-      Book a call
-    </a>
-  </div>
-
-  <!-- Footer -->
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <h3>Techvory</h3>
-          <p>Transforming ideas into powerful <br> web solutions since 2021.</p>
-          <div class="social-links">
-            <a href="https://www.linkedin.com/in/techvory-solutions/" target="_blank" aria-label="Linkedin">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.8 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0zM7.08 20.16H3.56V9h3.52v11.16zm-1.77-12.8a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zm15.09 12.8h-3.52v-5.7c0-1.36-.03-3.1-1.89-3.1-1.89 0-2.18 1.48-2.18 3v5.8h-3.52V9h3.37v1.52h.05c.47-.89 1.6-1.82 3.29-1.82 3.52 0 4.17 2.31 4.17 5.31v6.15z" />
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <a href="#" class="logo">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
+              <span>Techvory</span>
             </a>
-            <a href="https://x.com/techvory" target="_blank" aria-label="Twitter">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M23.953 4.569a10 10 0 0 1-2.825.775 4.937 4.937 0 0 0 2.163-2.723 10.15 10.15 0 0 1-3.127 1.196 4.924 4.924 0 0 0-8.384 4.482A13.978 13.978 0 0 1 1.64 3.15 4.822 4.822 0 0 0 3.18 9.723a4.903 4.903 0 0 1-2.229-.616v.06a4.924 4.924 0 0 0 3.946 4.827 4.996 4.996 0 0 1-2.224.084 4.929 4.929 0 0 0 4.604 3.417A9.875 9.875 0 0 1 0 20.539a13.944 13.944 0 0 0 7.548 2.212c9.057 0 14.01-7.514 14.01-14.01 0-.213-.004-.426-.014-.637a9.935 9.935 0 0 0 2.408-2.531z" />
-              </svg>
-            </a>
+            <p>Transforming ideas into powerful <br> web solutions since 2021.</p>
+          </div>
+          <div class="footer-links-group">
+            <h4>Services</h4>
+            <ul>
+              <li><a href="#">Frontend Development</a></li>
+              <li><a href="#">Backend Development</a></li>
+              <li><a href="#">Full Stack Solutions</a></li>
+            </ul>
+          </div>
+          <div class="footer-links-group">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#why-choose-us">Why work with us</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
           </div>
         </div>
-
-        <div class="footer-links-group">
-          <h4>Services</h4>
-          <ul>
-            <li><a href="#">Frontend Development</a></li>
-            <li><a href="#">Backend Development</a></li>
-            <li><a href="#">Full Stack Solutions</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-links-group">
-          <h4>Company</h4>
-          <ul>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#why-choose-us">Why work with us</a></li>
-            <li><a href="#portfolio">Previous projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-links-group">
-          <h4>Contact</h4>
-          <ul class="contact-details">
-            <li>techvorysolutions@gmail.com</li>
-            <li>+91 9566792784</li>
-            <li>+91 9451672228</li>
-          </ul>
+        <div style="border-top: 1px solid var(--card-border); padding-top: 24px; color: var(--text-muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+          <p>&copy; 2026 Techvory. All rights reserved.</p>
+          <div style="display: flex; gap: 24px;">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms</a>
+          </div>
         </div>
       </div>
+    </footer>
 
-      <div class="footer-bottom">
-        <p>&copy; 2025 Techvory. All rights reserved.</p>
-        <div class="footer-legal">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms</a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    let canvas = document.getElementById("miCanvas");
-    let context = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let mouseCoords = {
-      x: undefined,
-      y: undefined,
-    }
-
-    window.addEventListener("mousemove", (e) => {
-
-      if (mouseCoords.x < e.x) {
-        puntos.forEach(punto => {
-          punto.x -= - 0.6
-        });
-      }
-
-      if (mouseCoords.x > e.x) {
-        puntos.forEach(punto => {
-          punto.x += - 0.6
-        });
-      }
-
-      if (mouseCoords.y < e.y) {
-        puntos.forEach(punto => {
-          punto.y -= - 0.6
-        });
-      }
-
-      if (mouseCoords.y > e.y) {
-        puntos.forEach(punto => {
-          punto.y += - 0.6
-        });
-      }
-
-      mouseCoords.x = e.x;
-      mouseCoords.y = e.y;
-    })
-
-
-    function Punto() {
-
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.size = Math.random() * 20;
-      this.floatX = Math.random() * 0.3 - 0.1;
-      this.floatY = Math.random() * 0.3 - 0.1;
-      this.color = randomColor();
-
-      this.draw = function () {
-        context.beginPath();
-        context.fillStyle = this.color;
-        context.arc(this.x, this.y, this.size, 0, 360);
-        context.fill();
-      }
-
-      this.draw = function () {
-        context.beginPath();
-        context.strokeStyle = this.color; // Set the color for the square outline
-        context.lineWidth = 1; // Optional: Set the line width for the square outline
-        context.rect(this.x, this.y, this.size, this.size); // Draw a square
-        context.stroke(); // Render the square's outline
-      }
-
-      this.update = function () {
-
-        if (this.x > canvas.width) this.x = -10;
-        if (this.x < -20) this.x = canvas.width;
-        if (this.y > canvas.height) this.y = -10;
-        if (this.y < -20) this.y = canvas.height;
-
-        this.x += this.floatX;
-        this.y += this.floatY;
-        this.draw();
-      }
-    }
-
-    let puntos = [];
-    for (let i = 0; i < 150; i++)  puntos[i] = new Punto();
-
-    function move() {
-
-      context.clearRect(0, 0, canvas.width, canvas.height);
-
-      puntos.forEach(punto => {
-        punto.update();
-      });
-
-      requestAnimationFrame(move);
-    }
-
-    move();
-
-    function randomColor() {
-      let random = Math.random() * 3;
-      if (random > 2) return "rgb(206, 206, 206)";
-      if (random < 2 && random > 1) return "0072FF5d";
-      if (random < 1) return "#0072FF5d";
-    }
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"
-    integrity="sha512-eP6ippJojIKXKO8EPLtsUMS+/sAGHGo1UN/38swqZa1ypfcD4I0V/ac5G3VzaHfDaklFmQLEs51lhkkVaqg60Q=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/ScrollTrigger.min.js"
-    integrity="sha512-CPA5LMoJI/a5HkSIAKcBtFXe4gqGjPUL2ExF/3PmhrrHI17wod9xOqqF+0WZQRKIIq0KwF8oG5BaiWobtrke3A=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script>
-    gsap.registerPlugin(ScrollTrigger);
-    var tl = gsap.timeline();
-
-    tl.from('.hero-text', {
-      y: '-50%',
-      opacity: 0,
-      duration: 2,
-      ease: Power4.easeOut
-    })
-
-    tl.from('.hero-heading', {
-      y: '50%',
-      opacity: 0,
-      duration: 2,
-      ease: Power4.easeOut
-    }, "-=2")
-
-    gsap.from('.service-card', {
-      scrollTrigger: {
-        trigger: '.services-grid',
-        start: 'top bottom'
-      },
-      x: window.innerWidth <= 768 ? 0 : '50',
-      opacity: 0,
-      duration: 2,
-      ease: Power4.easeOut
-    })
-
-    gsap.from('.feature-card', {
-      scrollTrigger: {
-        trigger: '.why-choose-us',
-        start: 'top center'
-      },
-      x: window.innerWidth <= 768 ? 0 : '-50',
-      opacity: 0,
-      duration: 2,
-      ease: Power4.easeOut
-    })
-
-    gsap.from('.portfolio-item', {
-      scrollTrigger: {
-        trigger: '.portfolio',
-        start: 'top center'
-      },
-      x: window.innerWidth <= 768 ? 0 : '-50',
-      opacity: 0,
-      duration: 2,
-      ease: Power4.easeOut
-    })
-  </script>
-  <div id="agnes-modal" class="agnes-modal-overlay">
-    <div class="agnes-modal-content">
-      <div class="agnes-blob"></div>
-
-      <button class="agnes-close-btn" aria-label="Close Modal" onclick="closeAgnesModal()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-
-      <!-- Hero Image -->
-      <div class="agnes-hero-image">
-        <img src="images/agnes_hero-1.png" alt="AI-powered real estate">
-      </div>
-
-      <div class="agnes-modal-body">
-        <div class="agnes-logo-area">
-          <span class="agnes-logo-text">Coming soon</span>
-        </div>
-
-        <h2 class="agnes-title">Agnes AI</h2>
-        <p class="agnes-subtitle">
-          The future of contextual real estate AI is arriving <br>
-          Visit now to get early access
-        </p>
-
-        <a href="https://agnes.techvory.in" target="_blank" class="agnes-cta-btn">
-          Explore Agnes
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </a>
-      </div>
-    </div>
   </div>
 
   <script>
-    // Agnes Modal Logic
-    document.addEventListener('DOMContentLoaded', () => {
-      const modal = document.getElementById('agnes-modal');
+    document.addEventListener("DOMContentLoaded", () => {
 
-      // Open on load with a slight delay for better UX
+      // --- 1. Typewriter Effect ---
+      const fullText = "Launch Your Product with speed";
+      const typeWriterElement = document.getElementById("typewriter-text");
+      
+      let i = 0;
       setTimeout(() => {
-        modal.classList.add('active');
-      }, 1000);
-    });
+        const typeInterval = setInterval(() => {
+          const currentText = fullText.substring(0, i + 1);
+          
+          // Split for styling: "Launch Your Product " is 20 chars, "with speed" is 10 chars
+          const whiteText = currentText.substring(0, 20);
+          const purpleText = currentText.substring(20);
+          
+          typeWriterElement.innerHTML = `
+            <span style="color: #ffffff">${whiteText}</span><span style="color: #A068FF">${purpleText}</span>
+          `;
+          
+          i++;
+          if (i === fullText.length) clearInterval(typeInterval);
+        }, 50); 
+      }, 400);
 
-    function closeAgnesModal() {
-      const modal = document.getElementById('agnes-modal');
-      modal.classList.remove('active');
-    }
+      // --- 2. Count-Up Animation (30 Days) ---
+      const countElement = document.getElementById("days-count");
+      const endValue = 30;
+      const duration = 2000;
+      const delay = 1200;
+      let startTimestamp = null;
+      
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = timestamp - startTimestamp;
+        const easeOutCubic = 1 - Math.pow(1 - progress / duration, 3);
+        const currentCount = Math.min(Math.floor(easeOutCubic * endValue), endValue);
+        
+        countElement.innerText = currentCount;
+        
+        if (progress < duration) window.requestAnimationFrame(step);
+        else countElement.innerText = endValue;
+      };
+      
+      setTimeout(() => {
+        window.requestAnimationFrame(step);
+      }, delay);
 
-    // Also close on background click
-    document.getElementById('agnes-modal').addEventListener('click', (e) => {
-      if (e.target === document.getElementById('agnes-modal')) {
-        closeAgnesModal();
-      }
-    });
+      // --- 3. Dynamic Logo Ticker ---
+      const tickerTrack = document.getElementById("ticker-track");
+      const logos = [
+        'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg',
+        'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg',
+        'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
+        'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg',
+        'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg',
+        'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg'
+      ];
+      // Quadruple the array to ensure a seamless infinite scroll width
+      const repeatedLogos = [...logos, ...logos, ...logos, ...logos];
 
-
-    // Toggle Mobile Menu
-    // Navbar Scroll Effect (Absolute -> Fixed transition)
-    const header = document.querySelector('.header');
-
-    window.addEventListener('scroll', () => {
-      if (window.innerWidth <= 1062) {
-        header.classList.remove('scrolled');
-        return;
-      }
-      if (window.scrollY > 0) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
-    });
-
-    function toggleMenu() {
-      const navLinks = document.querySelector('.nav-links');
-      const hamburger = document.querySelector('.hamburger-btn');
-
-      navLinks.classList.toggle('active');
-      hamburger.classList.toggle('active');
-    }
-
-    // Close menu when clicking a link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('click', () => {
-        document.querySelector('.nav-links').classList.remove('active');
-        document.querySelector('.hamburger-btn').classList.remove('active');
+      repeatedLogos.forEach(src => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = "Tech Stack Logo";
+        img.className = "ticker-logo";
+        tickerTrack.appendChild(img);
       });
-    });
 
-    // === Meltano-style Parallax Scroll Engine ===
-    (function () {
-      const parallaxLayers = document.querySelectorAll('.parallax-layer');
-      const heroContent = document.querySelector('.hero-content');
-      const hero = document.querySelector('.hero');
-      let ticking = false;
+      // --- 4. Mobile Menu Toggle Logic ---
+      const hamburger = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileLinks = document.querySelectorAll('.mobile-nav-link');
 
-      function updateParallax() {
-        const scrollY = window.scrollY;
-        const heroHeight = hero ? hero.offsetHeight : window.innerHeight;
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        // Prevent body scrolling when menu is open
+        document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+      });
 
-        // Only apply parallax within the hero section
-        if (scrollY > heroHeight) {
-          ticking = false;
-          return;
-        }
-
-        // Move each layer at its defined speed
-        parallaxLayers.forEach(layer => {
-          const speed = parseFloat(layer.dataset.speed) || 0.1;
-          const drift = parseFloat(layer.dataset.drift) || 0;
-          const scaleRate = parseFloat(layer.dataset.scale) || 0;
-
-          const yOffset = -(scrollY * speed);
-          const xOffset = scrollY * drift;
-          const scale = 1 + (scrollY * scaleRate / 1000);
-
-          layer.style.transform = `translate3d(${xOffset}px, ${yOffset}px, 0) scale(${scale})`;
+      // Close menu when a link is clicked
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          hamburger.classList.remove('active');
+          mobileMenu.classList.remove('active');
+          document.body.style.overflow = '';
         });
+      });
 
-        // Fade out + lift hero content on scroll (like Meltano)
-        if (heroContent) {
-          const progress = Math.min(scrollY / (heroHeight * 0.5), 1);
-          const opacity = 1 - progress;
-          const lift = -(scrollY * 0.3);
-          heroContent.style.transform = `translate3d(0, ${lift}px, 0)`;
-          heroContent.style.opacity = opacity;
-        }
-
-        ticking = false;
-      }
-
-      window.addEventListener('scroll', () => {
-        if (!ticking) {
-          requestAnimationFrame(updateParallax);
-          ticking = true;
-        }
-      }, { passive: true });
-    })();
+    });
   </script>
 </body>
-
 </html>
