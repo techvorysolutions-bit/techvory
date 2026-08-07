@@ -10,6 +10,7 @@
     :root {
       --primary: #A068FF;
       --dark-bg: #060218;
+      --dark-bg-rgb: 6, 2, 24; /* Unified base RGB for all transparencies */
       --card-bg: rgba(255, 255, 255, 0.03);
       --card-border: rgba(255, 255, 255, 0.1);
       --text-dark: #000000;
@@ -32,17 +33,18 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #060218 url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260624_111401_56af5012-2263-45d3-849a-8688084d7c2a.png&w=1280&q=85') top center / cover fixed no-repeat;
+      background: var(--dark-bg) url('https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260624_111401_56af5012-2263-45d3-849a-8688084d7c2a.png&w=1280&q=85') top center / cover fixed no-repeat;
       color: var(--text-light);
-      overflow-x: hidden;
+      /* Use clip instead of hidden so position: sticky works */
+      overflow-x: clip; 
     }
 
     .app {
-      background: linear-gradient(to bottom, rgba(6,2,24,0.3) 0%, rgba(6,2,24,0.95) 100vh, #060218 100%);
+      background: linear-gradient(to bottom, rgba(var(--dark-bg-rgb), 0.3) 0%, rgba(var(--dark-bg-rgb), 0.95) 100vh, var(--dark-bg) 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
+      overflow-x: clip; /* Use clip instead of hidden */
     }
 
     /* --- Typography & Utilities --- */
@@ -146,7 +148,7 @@
       left: 0;
       width: 100%;
       height: 100vh;
-      background: rgba(6, 2, 24, 0.98);
+      background: rgba(var(--dark-bg-rgb), 0.98);
       backdrop-filter: blur(15px);
       z-index: 1000;
       display: flex;
@@ -187,7 +189,7 @@
       position: absolute;
       inset: -2px;
       border-radius: 52px;
-      background: conic-gradient(from var(--border-angle), var(--primary), #070319, var(--primary), #070319, var(--primary));
+      background: conic-gradient(from var(--border-angle), var(--primary), var(--dark-bg), var(--primary), var(--dark-bg), var(--primary));
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
@@ -374,10 +376,9 @@
       border-radius: 20px;
       padding: 32px;
       backdrop-filter: blur(10px);
-      /* Bouncy cubic-bezier for a more premium feel */
       transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       position: relative;
-      overflow: hidden; /* Needed to contain the shine effect */
+      overflow: hidden; 
       z-index: 1;
     }
 
@@ -401,14 +402,13 @@
     }
 
     .card:hover::before {
-      left: 200%; /* Sweeps the shine across the card */
+      left: 200%;
     }
 
     .card:hover {
       transform: translateY(-8px) scale(1.02);
       border-color: rgba(160, 104, 255, 0.6);
       background: rgba(160, 104, 255, 0.08);
-      /* Outer neon glow and subtle inner highlight */
       box-shadow: 
         0 15px 35px -10px rgba(160, 104, 255, 0.3),
         inset 0 0 20px rgba(160, 104, 255, 0.05);
@@ -424,10 +424,9 @@
       justify-content: center;
       margin-bottom: 24px;
       color: var(--primary);
-      transition: all 0.4s ease; /* Transition for icon */
+      transition: all 0.4s ease;
     }
 
-    /* Animate the icon on card hover */
     .card:hover .card-icon {
       transform: scale(1.15) rotate(-5deg);
       background: var(--primary);
@@ -444,7 +443,6 @@
       animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
     
-    /* Delay each card in the grid slightly */
     .grid .card:nth-child(1) { animation-delay: 0.1s; }
     .grid .card:nth-child(2) { animation-delay: 0.2s; }
     .grid .card:nth-child(3) { animation-delay: 0.3s; }
@@ -531,7 +529,7 @@
       
       /* Toggle Menu display logic */
       .nav-links { display: none; }
-      .header-right .btn-border-wrap { display: none; } /* Hide main CTA to save space for hamburger */
+      .header-right .btn-border-wrap { display: none; }
       .hamburger { display: flex; }
 
       /* Hero Section layout fix */
@@ -543,15 +541,64 @@
 
       /* Fix the overflowing giant orbits */
       .hero-right { 
-        transform: scale(0.4); 
-        margin-top: -180px; 
-        margin-bottom: -180px; 
+        width: 100%;
+        height: 380px;
+        margin-top: 32px; 
+        margin-bottom: 32px; 
+        transform: none;
+      }
+      
+      .circles-container {
+        width: 800px;
+        height: 800px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.45); 
       }
 
-      /* Fix section spacing & Grid overflowing */
+      /* Fix section spacing */
       .section { padding: 60px 0; }
       .section h2 { font-size: 36px; }
-      .grid { grid-template-columns: 1fr; gap: 20px; } 
+
+      /* --- NEW: STICKY HEADER & STACKING CARDS (SERVICES & WHY US SECTIONS) --- */
+      #services .section-header,
+      #why-choose-us .section-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--dark-bg); /* Now uses the exact base dark background color */
+        padding: 24px 24px 16px 24px; 
+        margin-left: -24px;
+        margin-right: -24px;
+      }
+
+      #services .grid,
+      #why-choose-us .grid { 
+        display: flex;
+        flex-direction: column;
+        gap: 32px; 
+      }
+      
+      #services .card,
+      #why-choose-us .card {
+        position: sticky;
+        background: rgba(var(--dark-bg-rgb), 0.98); /* Same hue, just 98% opaque to mask text below */
+        backdrop-filter: blur(20px);
+        box-shadow: 0 -15px 30px -10px rgba(0, 0, 0, 0.7); 
+      }
+      
+      /* Stagger the top positions starting BELOW the height of the sticky header */
+      #services .card:nth-child(1), #why-choose-us .card:nth-child(1) { top: 170px; z-index: 1; }
+      #services .card:nth-child(2), #why-choose-us .card:nth-child(2) { top: 190px; z-index: 2; }
+      #services .card:nth-child(3), #why-choose-us .card:nth-child(3) { top: 210px; z-index: 3; }
+      #services .card:nth-child(4), #why-choose-us .card:nth-child(4) { top: 230px; z-index: 4; }
+      #services .card:nth-child(5), #why-choose-us .card:nth-child(5) { top: 250px; z-index: 5; }
+      #services .card:nth-child(6), #why-choose-us .card:nth-child(6) { top: 270px; z-index: 6; }
+      /* ------------------------------------------------------------- */
+
+      /* Other Grid fixes */
+      #team .grid { grid-template-columns: 1fr; gap: 20px; } 
 
       /* Footer & Contact fixes */
       .footer-top { grid-template-columns: 1fr; gap: 32px; }
@@ -789,7 +836,7 @@
           
           <div class="card team-card">
             <div class="team-image">
-              <img src="./images/arpit.jpeg" alt="Arpit Rathi">
+              <img src="./images/arpit.jpg" alt="Arpit Rathi">
             </div>
             <h3>Arpit Rathi</h3>
             <span class="role">Senior Frontend Engineer</span>
@@ -893,7 +940,6 @@
         const typeInterval = setInterval(() => {
           const currentText = fullText.substring(0, i + 1);
           
-          // Split for styling: "Launch Your Product " is 20 chars, "with speed" is 10 chars
           const whiteText = currentText.substring(0, 20);
           const purpleText = currentText.substring(20);
           
