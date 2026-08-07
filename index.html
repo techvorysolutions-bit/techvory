@@ -532,6 +532,20 @@
       .header-right .btn-border-wrap { display: none; }
       .hamburger { display: flex; }
 
+      /* Keep the mobile menu CTA compact instead of stretching it across the menu. */
+      .mobile-nav-links { align-items: center; }
+      .mobile-menu .btn-border-wrap {
+        width: min(100%, 280px);
+        align-self: center;
+        margin-top: 8px !important;
+      }
+      .mobile-menu .btn {
+        width: 100%;
+        min-height: 56px;
+        padding: 16px 24px !important;
+        white-space: nowrap;
+      }
+
       /* Hero Section layout fix */
       .heading { font-size: 40px; min-height: auto; }
       .hero { padding-top: 20px; gap: 0; }
@@ -742,7 +756,7 @@
     <section id="services" class="section">
       <div class="container">
         <div class="section-header">
-          <span class="section-tag">/capabilities/</span>
+          <span class="section-tag">/services/</span>
           <h2>Build Everything.</h2>
           <p class="subtitle">Comprehensive product development solutions.</p>
         </div>
@@ -785,7 +799,7 @@
     <section id="why-choose-us" class="section">
       <div class="container">
         <div class="section-header">
-          <span class="section-tag">/why us/</span>
+          <span class="section-tag">/why choose us/</span>
           <h2>Why Choose Us.</h2>
           <p class="subtitle">Partner with experts who understand your business needs.</p>
         </div>
@@ -892,12 +906,9 @@
         <div class="footer-top">
           <div class="footer-brand">
             <a href="#" class="logo">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-              <span>Techvory</span>
+              <img src="./images/logo.png" alt="Techvory Logo" />
             </a>
-            <p>Transforming ideas into powerful <br> web solutions since 2021.</p>
+            <p>Transforming ideas into powerful <br> web solutions since 2026.</p>
           </div>
           <div class="footer-links-group">
             <h4>Services</h4>
